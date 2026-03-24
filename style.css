@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow-y: scroll;
+    /* Make the page scrollable */
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    /* Adjust top margin for content */
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-top: 20px;
+    /* Added space to move heading down a bit */
+    text-align: center;
+}
+
+#target-area {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    /* Decrease target area size */
+    margin-top: 10px;
+    /* Reduce the gap between button and target area */
+    border: 2px dashed #333;
+    overflow: hidden;
+}
+
+.target {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #ff5722;
+    /* Target color */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#results {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    /* Gap between button and target area reduced */
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input[type="range"] {
+    width: 80%;
+    margin-top: 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    background: #ff5722;
+    /* Match slider track color to target color */
+    border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ff5722;
+    /* Match slider thumb color to target color */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ff5722;
+    /* Match slider thumb color to target color */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+/* Make content responsive */
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px;
+        padding: 5px;
+    }
+    button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+    input[type="range"] {
+        width: 90%;
+        /* Make slider more responsive on smaller screens */
+    }
+}

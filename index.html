@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitts' Law Experiment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Fitts' Law Experiment</h1>
+        <p>Click the targets as fast as you can. The target size and distance will change.</p>
+
+        <div id="target-area">
+            <div class="target" id="target"></div>
+        </div>
+
+        <p>Adjust Target Size:</p>
+        <input type="range" id="sizeSlider" min="30" max="150" value="50">
+        <p>Size: <span id="sliderValue">50</span>px</p>
+
+        <button id="start-button">Start Experiment</button>
+        <div id="results">
+            <p id="feedback"></p>
+            <p id="time">Time: 0s</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
