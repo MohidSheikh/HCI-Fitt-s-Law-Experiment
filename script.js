@@ -1,73 +1,103 @@
-// Variables
-let target = document.getElementById('target');
-let startButton = document.getElementById('start-button');
-let feedback = document.getElementById('feedback');
-let timeDisplay = document.getElementById('time');
-let targetArea = document.getElementById('target-area');
-let startTime, endTime;
-let experimentEnded = false; // Flag to check if the experiment has ended
+const target = document.getElementById('target');
+const startButton = document.getElementById('start-button');
+const feedback = document.getElementById('feedback');
+const timeDisplay = document.getElementById('time');
+const sizeSlider = document.getElementById('sizeSlider');
+const sliderValue = document.getElementById('sliderValue');
+const gameCanvas = document.getElementById('game-canvas');
+const loaderText = document.getElementById('canvas-loader');
+const scoreList = document.getElementById('score-list');
 
-// Slider Element
-let sizeSlider = document.getElementById('sizeSlider');
-let sliderValue = document.getElementById('sliderValue');
+let startTime;
+let timerInterval;
+let experimentActive = false;
+let scoreHistory = [];
 
-// Event Listener for Start Button
-startButton.addEventListener('click', startExperiment);
+// Initialize
+updateTargetSize(sizeSlider.value);
 
-// Event Listener for Size Slider
-sizeSlider.addEventListener('input', function() {
-    // Update target size based on slider value
-    target.style.width = sizeSlider.value + 'px';
-    target.style.height = sizeSlider.value + 'px';
-    sliderValue.textContent = sizeSlider.value; // Update size value displayed
+sizeSlider.addEventListener('input', (e) => {
+    sliderValue.textContent = e.target.value;
+    updateTargetSize(e.target.value);
 });
 
-// Start Experiment
-function startExperiment() {
-    experimentEnded = false; // Reset the experiment ended flag when starting a new experiment
-    startButton.disabled = true;
-    feedback.textContent = "Click the target as fast as you can!";
-    timeDisplay.textContent = "Time: 0s";
-    placeTarget(); // First target position
+startButton.addEventListener('click', startExperiment);
+target.addEventListener('click', handleTargetClick);
 
-    startTime = new Date(); // Start time when experiment begins
-    let timeInterval = setInterval(function() {
-        let elapsedTime = Math.floor((new Date() - startTime) / 1000);
-        timeDisplay.textContent = "Time: " + elapsedTime + "s";
-    }, 1000);
-
-    // Set target click listener
-    target.addEventListener('click', targetClickHandler);
+function updateTargetSize(size) {
+    target.style.width = `${size}px`;
+    target.style.height = `${size}px`;
 }
 
-// Target Click Handler
-function targetClickHandler() {
-    if (experimentEnded) return; // If the experiment has ended, prevent further clicks
+function startExperiment() {
+    experimentActive = true;
+    startButton.disabled = true;
+    loaderText.style.display = 'none';
+    feedback.textContent = "Click the target!";
 
-    endTime = new Date();
-    let reactionTime = (endTime - startTime) / 1000; // in seconds
-    feedback.textContent = "You clicked the target in " + reactionTime + " seconds!";
-    experimentEnded = true; // Mark experiment as ended
+    placeTarget();
+    target.style.display = 'block';
 
-    // Disable further clicks
-    target.removeEventListener('click', targetClickHandler);
+    startTime = performance.now();
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+        timeDisplay.textContent = `${elapsed}s`;
+    }, 10);
+}
+
+function handleTargetClick() {
+    if (!experimentActive) return;
+
+    const endTime = performance.now();
+    const finalTime = ((endTime - startTime) / 1000).toFixed(3);
+    const currentSize = sizeSlider.value;
+
+    experimentActive = false;
+    clearInterval(timerInterval);
+    target.style.display = 'none';
+    loaderText.style.display = 'block';
+
+    feedback.innerHTML = `Hit! <strong>${finalTime}s</strong>`;
+    timeDisplay.textContent = `${finalTime}s`;
+
+    updateHistory(finalTime, currentSize);
 
     setTimeout(() => {
         startButton.disabled = false;
         startButton.textContent = "Start Again";
-    }, 2000);
+    }, 800);
 }
 
-// Place target in random location
+function updateHistory(time, size) {
+    scoreHistory.unshift({ time, size });
+    if (scoreHistory.length > 5) scoreHistory.pop();
+    renderHistory();
+}
+
+function renderHistory() {
+    scoreList.innerHTML = '';
+    scoreHistory.forEach(entry => {
+        const li = document.createElement('li');
+        li.className = 'score-item';
+        li.innerHTML = `<strong>${entry.time}s</strong> <span>Size: ${entry.size}px</span>`;
+        scoreList.appendChild(li);
+    });
+}
+
 function placeTarget() {
-    let areaWidth = targetArea.offsetWidth;
-    let areaHeight = targetArea.offsetHeight;
-    let maxX = areaWidth - target.offsetWidth;
-    let maxY = areaHeight - target.offsetHeight;
+    const areaWidth = gameCanvas.clientWidth;
+    const areaHeight = gameCanvas.clientHeight;
+    const targetSize = parseInt(sizeSlider.value);
+    const padding = 25;
 
-    let randomX = Math.floor(Math.random() * maxX);
-    let randomY = Math.floor(Math.random() * maxY);
+    const maxX = areaWidth - targetSize - padding;
+    const maxY = areaHeight - targetSize - padding;
 
-    target.style.left = randomX + 'px';
-    target.style.top = randomY + 'px';
+    const randomX = Math.floor(Math.random() * (maxX - padding) + padding);
+    const randomY = Math.floor(Math.random() * (maxY - padding) + padding);
+
+    target.style.left = `${randomX}px`;
+    target.style.top = `${randomY}px`;
 }

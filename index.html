@@ -4,28 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitts' Law Experiment</title>
+    <title>Fitts' Law Lab</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <h1>Fitts' Law Experiment</h1>
-        <p>Click the targets as fast as you can. The target size and distance will change.</p>
+    <div class="app-container">
+        <header>
+            <h1>Fitts' Law <span class="accent">Lab</span></h1>
+            <div id="stats-bar">
+                <div class="stat">Time: <span id="time">0.00s</span></div>
+            </div>
+        </header>
 
-        <div id="target-area">
-            <div class="target" id="target"></div>
-        </div>
+        <main class="main-layout">
+            <section id="game-canvas">
+                <div class="target" id="target"></div>
+                <div id="canvas-loader">Press Start to Begin</div>
+            </section>
 
-        <p>Adjust Target Size:</p>
-        <input type="range" id="sizeSlider" min="30" max="150" value="50">
-        <p>Size: <span id="sliderValue">50</span>px</p>
+            <section class="control-panel">
+                <div class="control-group">
+                    <label for="sizeSlider">Target Size: <span id="sliderValue">50</span>px</label>
+                    <input type="range" id="sizeSlider" min="20" max="120" value="50">
+                </div>
 
-        <button id="start-button">Start Experiment</button>
-        <div id="results">
-            <p id="feedback"></p>
-            <p id="time">Time: 0s</p>
-        </div>
+                <button id="start-button">Start Experiment</button>
+
+                <div id="results">
+                    <p id="feedback">Ready to test your speed?</p>
+                </div>
+
+                <div class="history-section">
+                    <h3>Recent Attempts (Last 5)</h3>
+                    <ul id="score-list">
+                        <li class="empty-msg">No data yet</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
     </div>
     <script src="script.js"></script>
 </body>
